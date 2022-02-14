@@ -35,16 +35,16 @@ class gene2vec:
             node_rank = list(col_target.index)
             self.context_dict=defaultdict(list)
             
-            self.dict_by_range(col_target,node_rank,column)
+            #self.dict_by_range(col_target,node_rank,column)
             if self.by_value:
                 self.dict_by_value(col_target,node_rank,column)
 
             for _ in range(num_walks):
                 for start_node in node_rank:
-                    if col_target.at[start_node, column]>5: #only for start node with value greater 10
+                    if col_target.at[start_node, column]>0: #only for start node with value greater 10
                         walk = [start_node]#save the order of the genes
                         wl=random.randint(30, 120)
-                        while len(walk) < wl:
+                        while len(walk) < self.walk_len:
                             if len(walk)==1:
                                 cur =walk[-1]
                                 walk.append(np.random.choice(self.context_dict[cur]))
@@ -52,7 +52,7 @@ class gene2vec:
                                 cur =walk[-1]
                                 pre =walk[-2]
                                 cur_nei =sorted(self.context_dict[cur])
-                                #nxt= cur_nei[self.alias_jump(pre,cur)]
+                                #nxt= cur_nei[self.alias_jump(pre,cur)] #tuning p & q
                                 #nxt=self.alias_jump(pre,cur)
                                 walk.append(np.random.choice(cur_nei))
                         walks.append(walk)
